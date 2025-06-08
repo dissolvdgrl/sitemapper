@@ -101,9 +101,7 @@ class MainWindow(QMainWindow):
 
         if crawler.check_connectivity() == 200:
             self.status_bar.showMessage("we've got green")
-
-
-
+            crawler.get_urls()
 
 
 app = QApplication(sys.argv)
