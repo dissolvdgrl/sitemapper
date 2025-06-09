@@ -23,7 +23,15 @@ class Crawler:
         return BeautifulSoup(response_text, "html.parser")
 
     def get_urls(self):
-        current_url = self.__all_urls.pop(0)
         soup = self.init_soup(self.__response_text)
         link_elements = soup.select("a[href]")
-        print(link_elements)
+        for link in link_elements:
+            url = link["href"]
+            # Only gather internal URLs
+            if (not url.startswith("http")) and url != '/':
+                absolute_url = self.__url.rstrip(self.__url[-1]) + url
+                # push to all_urls if it isn't already there
+                if absolute_url not in self.__all_urls:
+                    self.__all_urls.append(absolute_url)
+
+# TODO: recursive page crawling method to crawl everything
