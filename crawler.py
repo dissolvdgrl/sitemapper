@@ -4,12 +4,13 @@ from bs4 import BeautifulSoup
 
 class Crawler:
     def __init__(self, url):
-        self.__url = url
-        self.__all_urls = [self.__url]
+        self.__root_url = url
+        self.__all_urls = [self.__root_url]
+        self.__crawled_urls = []
         self.__response_text = ""
 
     def check_connectivity(self):
-        response = requests.get(self.__url)
+        response = requests.get(self.__root_url)
         response.raise_for_status()
 
         self.__response_text = response.text
@@ -29,9 +30,15 @@ class Crawler:
             url = link["href"]
             # Only gather internal URLs
             if (not url.startswith("http")) and url != '/':
-                absolute_url = self.__url.rstrip(self.__url[-1]) + url
+                if self.__root_url[-1] == '/':
+                    absolute_url = self.__root_url.rstrip(self.__root_url[-1]) + url
+                else:
+                    absolute_url = self.__root_url + url
                 # push to all_urls if it isn't already there
                 if absolute_url not in self.__all_urls:
                     self.__all_urls.append(absolute_url)
+
+        print(self.__all_urls)
+
 
 # TODO: recursive page crawling method to crawl everything
