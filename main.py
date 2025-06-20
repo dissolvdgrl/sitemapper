@@ -53,13 +53,17 @@ class MainWindow(QMainWindow):
 
         self.crawl_site_button = QPushButton("Crawl site")
         self.copy_output_button = QPushButton("Copy to clipboard")
+        self.save_xml_file_button = QPushButton("Save XML file")
 
         self.crawl_site_button.setDisabled(True)
         self.copy_output_button.setDisabled(True)
+        self.save_xml_file_button.setDisabled(True)
 
         # CONNECT BUTTON & LINE EDIT SIGNALS
         self.site_url_text_edit.textEdited.connect(self.url_added)
         self.crawl_site_button.clicked.connect(self.start_crawl)
+        self.copy_output_button.clicked.connect(self.copy_to_clipboard)
+        self.save_xml_file_button.clicked.connect(self.save_xml_file)
 
         # OUTPUT BOX
         self.output_box = QPlainTextEdit()
@@ -78,6 +82,7 @@ class MainWindow(QMainWindow):
 
         output_container.addWidget(self.output_box)
         output_container.addWidget(self.copy_output_button)
+        output_container.addWidget(self.save_xml_file_button)
         layout.addLayout(output_container)
 
         widget = QWidget()
@@ -101,8 +106,28 @@ class MainWindow(QMainWindow):
 
         if crawler.check_connectivity() == 200:
             self.status_bar.showMessage("we've got green")
-            crawler.get_urls()
+            crawled = crawler.crawl_all()
 
+            if crawled:
+                xml = crawler.generate_sitemap_xml(True)
+                if xml:
+                    self.save_xml_file_button.setDisabled(False)
+                    self.copy_output_button.setDisabled(False)
+                self.output_box.setPlainText(xml)
+            else:
+                self.status_bar.showMessage("we couldn't crawl the website you provided")
+
+
+            self.crawl_site_button.setDisabled(False)
+
+    def copy_to_clipboard(self):
+        xml_plain_text = self.output_box.toPlainText()
+        clipboard = QApplication.clipboard()
+        clipboard.setText(xml_plain_text)
+        self.status_bar.showMessage("Copied to clipboard")
+
+    def save_xml_file(self):
+        self.status_bar.showMessage("Saved xml file to disk")
 
 app = QApplication(sys.argv)
 
