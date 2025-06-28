@@ -15,7 +15,10 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QStatusBar,
-    QFileDialog, QMessageBox
+    QFileDialog,
+    QMessageBox,
+    QDateEdit,
+    QComboBox
 )
 from compose.cli.main import filter_services
 
@@ -31,6 +34,7 @@ class MainWindow(QMainWindow):
         self.worker = None
         self.setWindowTitle("Sitemapper")
         self.resize(1024, 400)
+        self.selected_change_freq = ""
 
         # URL Pattern Regex
         self.url_regex = QRegularExpression(r'^https:\/\/(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\/?$')
@@ -51,12 +55,20 @@ class MainWindow(QMainWindow):
         output_container = QVBoxLayout()
         form_container = QWidget()
 
-        # BUTTONS & FORMS
+        # FORMS
         self.main_layout = QFormLayout()
         self.site_url_text_edit = QLineEdit()
         self.site_url_text_edit.setPlaceholderText("https://mysite.com")
         self.site_url_text_edit.setValidator(url_regex_validator)
+        self.last_mod_text_edit = QDateEdit()
+        self.change_freq_edit = QComboBox()
+        self.change_freq_edit.setToolTip("Change frequency tells search engines how often a page’s content updates.")
+        self.change_freq_edit.addItems(["Always", "Hourly", "Daily", "Weekly", "Monthly", "Yearly", "never"])
+        self.change_freq_edit.setCurrentIndex(3) # Set the default to Weekly
 
+        self.change_freq_edit.currentIndexChanged.connect(self.set_change_freq)
+
+        # BUTTONS
         self.crawl_site_button = QPushButton("Crawl site")
         self.copy_output_button = QPushButton("Copy to clipboard")
         self.save_xml_file_button = QPushButton("Save XML file")
@@ -83,7 +95,9 @@ class MainWindow(QMainWindow):
         form_container.setLayout(self.main_layout)
         layout.addWidget(form_container)
 
-        self.main_layout.addRow("Site URL", self.site_url_text_edit)
+        self.main_layout.addRow("Site URL*", self.site_url_text_edit)
+        self.main_layout.addRow("Last modified", self.last_mod_text_edit)
+        self.main_layout.addRow("Change frequency", self.change_freq_edit)
         self.main_layout.addRow(self.crawl_site_button)
 
         output_container.addWidget(self.output_box)
@@ -104,19 +118,22 @@ class MainWindow(QMainWindow):
         else:
             self.crawl_site_button.setDisabled(True)
 
+    def set_change_freq(self):
+        self.selected_change_freq = self.change_freq_edit.currentText()
+
     def start_crawl(self):
         self.status_bar.showMessage("starting crawl, please wait...")
         self.crawl_site_button.setDisabled(True)
 
         self.thread = QThread()
 
-        crawler = Crawler(self.site_url_text_edit.text())
+        crawler = Crawler(self.site_url_text_edit.text(), self.last_mod_text_edit.text(), self.selected_change_freq)
         self.worker = CrawlerWorker(self.site_url_text_edit.text(), crawler)
         self.worker.moveToThread(self.thread)
 
         self.thread.started.connect(self.worker.run)
-        self.worker.done.connect(self.hanle_crawl_success)
-        self.worker.error.connect(self.hanle_crawl_error)
+        self.worker.done.connect(self.handle_crawl_success)
+        self.worker.error.connect(self.handle_crawl_error)
         self.worker.done.connect(self.thread.quit)
         self.worker.error.connect(self.thread.quit)
         self.worker.done.connect(self.thread.deleteLater)
@@ -165,14 +182,14 @@ class MainWindow(QMainWindow):
         print("Result: ", filename, selected_filter)
         self.status_bar.showMessage("Saved xml file to disk", 7000)
 
-    def hanle_crawl_success(self, xml):
+    def handle_crawl_success(self, xml):
         self.output_box.setPlainText(xml)
         self.save_xml_file_button.setDisabled(False)
         self.copy_output_button.setDisabled(False)
         self.status_bar.showMessage("Site crawled successfully!", 7000)
         self.crawl_site_button.setDisabled(False)
 
-    def hanle_crawl_error(self, message):
+    def handle_crawl_error(self, message):
         self.status_bar.showMessage(message, 700)
         self.crawl_site_button.setDisabled(False)
 

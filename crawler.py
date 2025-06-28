@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 
 class Crawler:
-    def __init__(self, url):
+    def __init__(self, url, last_modified, change_frequency):
         self.__soup = None
         self.__root_url = url.rstrip('/')
         self.__domain = urlparse(self.__root_url).netloc # internal urls only
@@ -23,6 +23,8 @@ class Crawler:
         })
         done = pyqtSignal(str)
         error = pyqtSignal(str)
+        self.__last_mod = last_modified
+        self.__change_frequency = change_frequency.lower()
 
     def check_connectivity(self) -> int:
         try:
@@ -149,9 +151,9 @@ class Crawler:
 
             if include_metadata:
                 # You can customize these values based on your needs
-                xml_lines.append('      <lastmod>2024-01-01</lastmod>')
-                xml_lines.append('      <changefreq>monthly</changefreq>')
-                xml_lines.append('      <priority>0.8</priority>')
+                xml_lines.append(f'      <lastmod>{self.__last_mod}</lastmod>')
+                xml_lines.append(f'      <changefreq>{self.__change_frequency}</changefreq>')
+                xml_lines.append(f'      <priority>0.8</priority>')
 
             xml_lines.append('   </url>')
 
