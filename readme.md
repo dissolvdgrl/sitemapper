@@ -8,9 +8,9 @@ I'm not a Python developer, and this project is for learning purposes. It is als
 Feel free to contact me via my website [https://chilldsgn.com](https://chilldsgn.com) if you have any questions or suggestions.
 
 ## TODO
-~~1. Add the actual functionality to save the XML output to a user's computer.~~
-~~2. Disable the crawl button when a crawl is in progress.~~
-~~3. Add a timer to remove the status bar messages after some delay.~~
+1. ~~Add the actual functionality to save the XML output to a user's computer.~~
+2. ~~Disable the crawl button when a crawl is in progress.~~
+3. ~~Add a timer to remove the status bar messages after some delay.~~
 4. Add optional fields to specify lastmod, changefreq, and priority.
 5. Add ability to save sitemaps to edit later when an update is needed. BREAD?
 6. Add more stuff to File, Settings, and Help menus
