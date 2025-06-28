@@ -1,7 +1,8 @@
+import os.path
 import sys
 
 from PyQt6.QtGui import QAction, QRegularExpressionValidator
-from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtCore import QRegularExpression, QStandardPaths
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -13,8 +14,10 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QPlainTextEdit,
     QVBoxLayout,
-    QStatusBar
+    QStatusBar,
+    QFileDialog, QMessageBox
 )
+from compose.cli.main import filter_services
 
 from crawler import Crawler
 
@@ -105,7 +108,7 @@ class MainWindow(QMainWindow):
         crawler = Crawler(self.site_url_text_edit.text())
 
         if crawler.check_connectivity() == 200:
-            self.status_bar.showMessage("we've got green")
+            self.status_bar.showMessage("we've got green", 7000)
             crawled = crawler.crawl_all()
 
             if crawled:
@@ -114,8 +117,9 @@ class MainWindow(QMainWindow):
                     self.save_xml_file_button.setDisabled(False)
                     self.copy_output_button.setDisabled(False)
                 self.output_box.setPlainText(xml)
+                self.status_bar.showMessage("Site crawled successfully", 7000)
             else:
-                self.status_bar.showMessage("we couldn't crawl the website you provided")
+                self.status_bar.showMessage("we couldn't crawl the website you provided", 7000)
 
 
             self.crawl_site_button.setDisabled(False)
@@ -124,10 +128,43 @@ class MainWindow(QMainWindow):
         xml_plain_text = self.output_box.toPlainText()
         clipboard = QApplication.clipboard()
         clipboard.setText(xml_plain_text)
-        self.status_bar.showMessage("Copied to clipboard")
+        self.status_bar.showMessage("Copied to clipboard", 7000)
 
     def save_xml_file(self):
-        self.status_bar.showMessage("Saved xml file to disk")
+        caption = "Save sitemap on my device"
+        initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        initial_filter = "XML Files (*.xml)"
+        filename, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            caption=caption,
+            directory=initial_dir,
+            filter=initial_filter,
+            initialFilter=initial_filter
+        )
+
+        # User cancels, do nothing
+        if not filename:
+            return
+
+        if os.path.exists(filename):
+            confirm = QMessageBox.question(
+                self,
+                "Warning - You're about to overwrite an existing file",
+                f"The file '{filename} already exists. Do you want to overwrite it?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            if confirm != QMessageBox.StandardButton.Yes:
+                return
+
+        try:
+            with open(filename, 'w', encoding='utf-8') as file:
+                file.write(self.output_box.toPlainText())
+            QMessageBox.information(self, "File saved", f"File saved successfully to:\n{filename}")
+        except Exception as exception:
+            QMessageBox.critical(self, "Error", f"Failed to save the file:\n{str(exception)}")
+
+        print("Result: ", filename, selected_filter)
+        self.status_bar.showMessage("Saved xml file to disk", 7000)
 
 app = QApplication(sys.argv)
 
