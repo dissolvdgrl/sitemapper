@@ -3,6 +3,7 @@ from typing import Set, List
 from urllib.parse import urlparse, urljoin
 
 import requests
+from PyQt6.QtCore import pyqtSignal
 from bs4 import BeautifulSoup
 
 
@@ -20,6 +21,8 @@ class Crawler:
         self.__session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
+        done = pyqtSignal(str)
+        error = pyqtSignal(str)
 
     def check_connectivity(self) -> int:
         try:
@@ -154,33 +157,3 @@ class Crawler:
 
         xml_lines.append('</urlset>')
         return '\n'.join(xml_lines)
-
-
-'''
-1. get all root page urls and put them in a list
-2. for each url in this list, visit it and get its urls, appending it to the list if they don't already exist
-3. when no new urls can be found, take each url and create an xml representation of it
-4. specify change frequency - optional
-5. specify priority - optional
-6. specify lastmod - optional
-'''
-
-'''
-<?xml version="1.0" encoding="UTF-8"?>
-
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-   <url>
-
-      <loc>http://www.example.com/</loc>
-
-      <lastmod>2005-01-01</lastmod>
-
-      <changefreq>monthly</changefreq>
-
-      <priority>0.8</priority>
-
-   </url>
-
-</urlset> 
-'''

@@ -2,7 +2,7 @@ import os.path
 import sys
 
 from PyQt6.QtGui import QAction, QRegularExpressionValidator
-from PyQt6.QtCore import QRegularExpression, QStandardPaths
+from PyQt6.QtCore import QRegularExpression, QStandardPaths, QThread
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
 )
 from compose.cli.main import filter_services
 
+from CrawlerWorker import CrawlerWorker
 from crawler import Crawler
 
 
@@ -26,6 +27,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.thread = None
+        self.worker = None
         self.setWindowTitle("Sitemapper")
         self.resize(1024, 400)
 
@@ -102,27 +105,23 @@ class MainWindow(QMainWindow):
             self.crawl_site_button.setDisabled(True)
 
     def start_crawl(self):
-        self.crawl_site_button.setDisabled(True)
         self.status_bar.showMessage("starting crawl, please wait...")
+        self.crawl_site_button.setDisabled(True)
+
+        self.thread = QThread()
 
         crawler = Crawler(self.site_url_text_edit.text())
+        self.worker = CrawlerWorker(self.site_url_text_edit.text(), crawler)
+        self.worker.moveToThread(self.thread)
 
-        if crawler.check_connectivity() == 200:
-            self.status_bar.showMessage("we've got green", 7000)
-            crawled = crawler.crawl_all()
+        self.thread.started.connect(self.worker.run)
+        self.worker.done.connect(self.hanle_crawl_success)
+        self.worker.error.connect(self.hanle_crawl_error)
+        self.worker.done.connect(self.thread.quit)
+        self.worker.error.connect(self.thread.quit)
+        self.worker.done.connect(self.thread.deleteLater)
 
-            if crawled:
-                xml = crawler.generate_sitemap_xml(True)
-                if xml:
-                    self.save_xml_file_button.setDisabled(False)
-                    self.copy_output_button.setDisabled(False)
-                self.output_box.setPlainText(xml)
-                self.status_bar.showMessage("Site crawled successfully", 7000)
-            else:
-                self.status_bar.showMessage("we couldn't crawl the website you provided", 7000)
-
-
-            self.crawl_site_button.setDisabled(False)
+        self.thread.start()
 
     def copy_to_clipboard(self):
         xml_plain_text = self.output_box.toPlainText()
@@ -165,6 +164,17 @@ class MainWindow(QMainWindow):
 
         print("Result: ", filename, selected_filter)
         self.status_bar.showMessage("Saved xml file to disk", 7000)
+
+    def hanle_crawl_success(self, xml):
+        self.output_box.setPlainText(xml)
+        self.save_xml_file_button.setDisabled(False)
+        self.copy_output_button.setDisabled(False)
+        self.status_bar.showMessage("Site crawled successfully!", 7000)
+        self.crawl_site_button.setDisabled(False)
+
+    def hanle_crawl_error(self, message):
+        self.status_bar.showMessage(message, 700)
+        self.crawl_site_button.setDisabled(False)
 
 app = QApplication(sys.argv)
 
