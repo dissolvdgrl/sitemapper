@@ -19,7 +19,7 @@ Feel free to contact me via my website [https://chilldsgn.com](https://chilldsgn
 5. Add ability to save sitemaps to edit later when an update is needed. BREAD?
 6. Add more stuff to File, Settings, and Help menus
 7. Add installation instructions for MacOS, Windows, Linux
-8. Include a way to load an XML file saved on disk
+8. ~~Include a way to load an XML file saved on disk~~
 9. Add error reporting to developer
 10. ~~Add warning dialog when closing if the output box contains XML~~
 11. Include a shameless plug to descripto.app :P

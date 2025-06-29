@@ -40,14 +40,17 @@ class MainWindow(QMainWindow):
         url_regex_validator = QRegularExpressionValidator(self.url_regex)
 
         # MENU SETUP
-        file_action = QAction("New...", self)
+        file_action_new = QAction("New...", self)
+        file_action_open = QAction("Open...", self)
+        file_action_open.triggered.connect(self.open_xml_sitemap)
 
         menu = self.menuBar()
         file_menu = menu.addMenu("&File")
         settings_menu = menu.addMenu("&Settings")
         help_menu = menu.addMenu("&Help")
 
-        file_menu.addAction(file_action)
+        file_menu.addAction(file_action_new)
+        file_menu.addAction(file_action_open)
 
         # LAYOUTS
         layout = QHBoxLayout()
@@ -152,7 +155,7 @@ class MainWindow(QMainWindow):
         filename, selected_filter = QFileDialog.getSaveFileName(
             self,
             caption=caption,
-            directory=initial_dir,
+            directory=f"{initial_dir}/untitled.xml",
             filter=initial_filter,
             initialFilter=initial_filter
         )
@@ -206,6 +209,27 @@ class MainWindow(QMainWindow):
                 event.ignore()
         else:
             event.accept()
+
+    def open_xml_sitemap(self):
+        caption = "Open a sitemap on your device"
+        initial_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DocumentsLocation)
+        initial_filter = "XML Files (*.xml)"
+        filename, selected_filter = QFileDialog.getOpenFileName(
+            self,
+            caption=caption,
+            directory=initial_dir,
+            filter=initial_filter,
+            initialFilter=initial_filter
+        )
+
+        # User cancels, do nothing
+        if not filename:
+            return
+
+        if filename:
+            with open(filename, "r") as file:
+                file_contents = file.read()
+            self.output_box.setPlainText(file_contents)
 
 
 app = QApplication(sys.argv)
