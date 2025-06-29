@@ -1,12 +1,11 @@
 import os.path
 import sys
 
-from PyQt6.QtGui import QAction, QRegularExpressionValidator
+from PyQt6.QtGui import QAction, QRegularExpressionValidator, QCloseEvent
 from PyQt6.QtCore import QRegularExpression, QStandardPaths, QThread
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
-    QToolBar,
     QWidget,
     QLineEdit,
     QFormLayout,
@@ -193,11 +192,27 @@ class MainWindow(QMainWindow):
         self.status_bar.showMessage(message, 700)
         self.crawl_site_button.setDisabled(False)
 
+    def closeEvent(self, event: QCloseEvent):
+        if self.output_box.toPlainText() != "":
+            response = QMessageBox.question(
+                self,
+                "Confirm Quit", "Are you sure you want to quit? Any unsaved progress will be lost.",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+
+            if response == QMessageBox.StandardButton.Yes:
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()
+
+
 app = QApplication(sys.argv)
 
 window = MainWindow()
 window.show()
-app.exec()
+sys.exit(app.exec())
 
 
 
