@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QMessageBox,
     QDateEdit,
-    QComboBox
+    QComboBox, QDialog
 )
 from compose.cli.main import filter_services
 
@@ -43,14 +43,19 @@ class MainWindow(QMainWindow):
         file_action_new = QAction("New...", self)
         file_action_open = QAction("Open...", self)
         file_action_open.triggered.connect(self.open_xml_sitemap)
+        file_action_help_about = QAction("About Sitemapper", self)
+        file_action_help_about.triggered.connect(self.show_about)
+        file_action_help_report_bug = QAction("Report a bug", self)
 
         menu = self.menuBar()
         file_menu = menu.addMenu("&File")
-        settings_menu = menu.addMenu("&Settings")
         help_menu = menu.addMenu("&Help")
 
         file_menu.addAction(file_action_new)
+        file_menu.addSeparator()
         file_menu.addAction(file_action_open)
+        help_menu.addAction(file_action_help_about)
+        help_menu.addAction(file_action_help_report_bug)
 
         # LAYOUTS
         layout = QHBoxLayout()
@@ -231,6 +236,12 @@ class MainWindow(QMainWindow):
                 file_contents = file.read()
             self.output_box.setPlainText(file_contents)
 
+    def show_about(self):
+        # Subclass this thing
+        dialog = QDialog(self)
+        dialog.resize(640, 256)
+        dialog.setWindowTitle("About Sitemapper")
+        dialog.exec()
 
 app = QApplication(sys.argv)
 
