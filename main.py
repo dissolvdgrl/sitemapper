@@ -21,6 +21,8 @@ from PyQt6.QtWidgets import (
 )
 from compose.cli.main import filter_services
 
+from AboutDialog import \
+    AboutDialog
 from CrawlerWorker import CrawlerWorker
 from crawler import Crawler
 
@@ -238,9 +240,7 @@ class MainWindow(QMainWindow):
 
     def show_about(self):
         # Subclass this thing
-        dialog = QDialog(self)
-        dialog.resize(640, 256)
-        dialog.setWindowTitle("About Sitemapper")
+        dialog = AboutDialog(self)
         dialog.exec()
 
 app = QApplication(sys.argv)

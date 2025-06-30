@@ -18,7 +18,7 @@ Feel free to contact me via my website [https://chilldsgn.com](https://chilldsgn
 4. ~~Add optional fields to specify lastmod, changefreq.~~
 5. Add ability to save sitemaps to edit later when an update is needed. BREAD?
 6. Add more stuff to File(New, Open, View All, Exit) menu
-7. Add more stuff to Help (About, Report a bug) menu
+7. ~~Add more stuff to Help (About, Report a bug) menu~~
 8. Add installation instructions for MacOS, Windows, Linux
 9. ~~Include a way to load an XML file saved on disk~~
 10. ~~Add warning dialog when closing if the output box contains XML~~
