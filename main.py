@@ -239,7 +239,6 @@ class MainWindow(QMainWindow):
             self.output_box.setPlainText(file_contents)
 
     def show_about(self):
-        # Subclass this thing
         dialog = AboutDialog(self)
         dialog.exec()
 
