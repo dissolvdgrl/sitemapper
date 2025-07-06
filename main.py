@@ -1,7 +1,7 @@
 import os.path
 import sys
 
-from PyQt6.QtGui import QAction, QRegularExpressionValidator, QCloseEvent
+from PyQt6.QtGui import QAction, QRegularExpressionValidator, QCloseEvent, QIcon
 from PyQt6.QtCore import QRegularExpression, QStandardPaths, QThread
 from PyQt6.QtWidgets import (
     QApplication,
@@ -19,12 +19,20 @@ from PyQt6.QtWidgets import (
     QDateEdit,
     QComboBox, QDialog
 )
-from compose.cli.main import filter_services
-
-from AboutDialog import \
-    AboutDialog
+from AboutDialog import AboutDialog
 from CrawlerWorker import CrawlerWorker
 from crawler import Crawler
+
+basedir = os.path.dirname(__file__)
+
+# For Windows - taskbar icon
+try:
+    from ctypes import windll
+
+    myappid = "com.chillstacksoftwaresolutions.sitemapper.1"
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 
 class MainWindow(QMainWindow):
@@ -243,7 +251,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
 app = QApplication(sys.argv)
-
+app.setWindowIcon(QIcon(os.path.join(basedir, "sitemapper-icon.svg")))
 window = MainWindow()
 window.show()
 sys.exit(app.exec())

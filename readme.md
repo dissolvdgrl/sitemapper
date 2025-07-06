@@ -1,11 +1,28 @@
 # Sitemapper - A basic desktop app to generate XML sitemaps
 A simple, easy to use desktop app to generate XML sitemaps for your website.
 
-![Screenshot of a desktop app called Sitemapper running on Ubuntu](https://chilldsgn.com/assets/sitemapper-screenshot.png)
-
 Please note that this app is still in active development and I'm fixing issues and adding more features.
 
-I will also update this readme with installation instructions once I've figured it out.
+![Screenshot of a desktop app called Sitemapper running on Ubuntu Linux](https://chilldsgn.com/assets/sitemapper-screenshot.png)
+
+## Installation
+You can install this on:
+- Windows
+- MacOS
+- Ubuntu Linux
+
+Please reach out to me if you're having trouble installing this on your system and I'll try to help you.
+
+## Build from source
+You'll need PyInstaller to do this. Make sure you install it in this project's virtual environment using ```pip3 install PyInstaller```.
+
+Then you can configure the ```main.spec``` file to suit your needs. 
+
+You can run ```pyinstaller main.spec``` to generate build and dist directories. You'll find an executable for the system you're building on in the dist directory.
+
+## General Notes
+
+This readme will be updated with installation instructions once I've figured it out.
 
 I'm not a Python developer, and this project is for learning purposes. It is also built out of frustration with most sitemap generator tools that have max page limits and make you pay.
 
