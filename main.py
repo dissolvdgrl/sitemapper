@@ -1,5 +1,6 @@
 import os.path
 import sys
+import webbrowser
 
 from PyQt6.QtGui import QAction, QRegularExpressionValidator, QCloseEvent, QIcon
 from PyQt6.QtCore import QRegularExpression, QStandardPaths, QThread
@@ -25,8 +26,8 @@ from crawler import Crawler
 
 basedir = os.path.dirname(__file__)
 
-# For Windows - taskbar icon
 try:
+    # For Windows - taskbar icon
     from ctypes import windll
 
     myappid = "com.chillstacksoftwaresolutions.sitemapper.1"
@@ -56,6 +57,7 @@ class MainWindow(QMainWindow):
         file_action_help_about = QAction("About Sitemapper", self)
         file_action_help_about.triggered.connect(self.show_about)
         file_action_help_report_bug = QAction("Report a bug", self)
+        file_action_help_report_bug.triggered.connect(self.report_bug)
 
         menu = self.menuBar()
         file_menu = menu.addMenu("&File")
@@ -249,6 +251,9 @@ class MainWindow(QMainWindow):
     def show_about(self):
         dialog = AboutDialog(self)
         dialog.exec()
+
+    def report_bug(self):
+        webbrowser.open('https://github.com/dissolvdgrl/sitemapper/issues')
 
 app = QApplication(sys.argv)
 app.setWindowIcon(QIcon(os.path.join(basedir, "sitemapper-icon.svg")))
