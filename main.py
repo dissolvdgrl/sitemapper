@@ -255,8 +255,14 @@ class MainWindow(QMainWindow):
     def report_bug(self):
         webbrowser.open('https://github.com/dissolvdgrl/sitemapper/issues')
 
+icon_path = os.path.join(basedir, "_internal", "sitemapper-icon.svg")
+
 app = QApplication(sys.argv)
-app.setWindowIcon(QIcon(os.path.join(basedir, "sitemapper-icon.svg")))
+
+if not os.path.exists(icon_path):
+    icon_path = os.path.join(basedir, "sitemapper-icon.svg")
+
+app.setWindowIcon(QIcon(icon_path))
 window = MainWindow()
 window.show()
 sys.exit(app.exec())
