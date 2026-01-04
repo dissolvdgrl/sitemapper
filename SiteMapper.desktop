@@ -1,0 +1,18 @@
+[Desktop Entry]
+# The type of the thing this desktop file refers to (e.g. can be Link)
+Type=Application
+
+# The application name
+Name=SiteMapper
+
+# Tooltip comment to show in menus
+Comment=A simple app to create XML sitemaps for your websites
+
+# The path in which the executable is run
+Path=/opt/SiteMapper
+
+# The executable
+Exec=/opt/SiteMapper/SiteMapper
+
+# The icon for the entry, use the target filesystem path
+Icon=sitemapper-icon.svg
