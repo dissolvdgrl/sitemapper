@@ -7,7 +7,7 @@ cp -r "dist/SiteMapper.app" "dist/dmg"
 # Create the dmg.
 create-dmg \
 --volname "SiteMapper" \
---volicon "icons/icon.icns" \
+--volicon "icon.icns" \
 --window-pos 200 120 \
 --window-size 800 400 \
 --icon-size 100 \

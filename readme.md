@@ -7,9 +7,9 @@ Please note that this app is still in active development and I'm fixing issues a
 
 ## Installation
 You can install this on:
-- Windows
-- MacOS
-- Ubuntu Linux
+- Windows 10 & 11 (Coming soon)
+- [MacOS](https://sourceforge.net/projects/sitemapper/files/SiteMapper.dmg/download)
+- [Ubuntu Linux](https://sourceforge.net/projects/sitemapper/files/sitemapper.deb/download)
 
 Please reach out to me if you're having trouble installing this on your system and I'll try to help you.
 
