@@ -7,9 +7,11 @@ Please note that this app is still in active development and I'm fixing issues a
 
 ## Installation
 You can install this on:
-- Windows 10 & 11 (Coming soon)
+- [Windows 10 & 11](https://sourceforge.net/projects/sitemapper/files/SiteMapper.exe/download)
 - [MacOS](https://sourceforge.net/projects/sitemapper/files/SiteMapper.dmg/download)
 - [Ubuntu Linux](https://sourceforge.net/projects/sitemapper/files/sitemapper.deb/download)
+
+Download any of the installers above and simply run them. Simple as that.
 
 Please reach out to me if you're having trouble installing this on your system and I'll try to help you.
 
@@ -28,7 +30,7 @@ I'm not a Python developer, and this project is for learning purposes. It is als
 
 Feel free to contact me via my website [https://chilldsgn.com](https://chilldsgn.com) if you have any questions or suggestions.
 
-## TODO
+## Roadmap
 1. ~~Add the actual functionality to save the XML output to a user's computer.~~
 2. ~~Disable the crawl button when a crawl is in progress.~~
 3. ~~Add a timer to remove the status bar messages after some delay.~~
@@ -36,7 +38,7 @@ Feel free to contact me via my website [https://chilldsgn.com](https://chilldsgn
 5. Add ability to save sitemaps to edit later when an update is needed. BREAD?
 6. Add more stuff to File(New, Open, View All, Exit) menu
 7. ~~Add more stuff to Help (About, Report a bug) menu~~
-8. Add installation instructions for MacOS, Windows, Linux
+8. ~Add installation instructions for MacOS, Windows, Linux~
 9. ~~Include a way to load an XML file saved on disk~~
 10. ~~Add warning dialog when closing if the output box contains XML~~
 11. Include a shameless plug to descripto.app :P
